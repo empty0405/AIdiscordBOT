@@ -39,11 +39,13 @@ try {
 
 // Test 3: Check if bot.js has valid syntax
 try {
-  require('./bot.js');
-  test('bot.js has valid syntax', false); // Will fail because DISCORD_TOKEN is not set
+  const botCode = fs.readFileSync('bot.js', 'utf8');
+  // Use Node.js to check syntax without executing
+  const { spawnSync } = require('child_process');
+  const result = spawnSync('node', ['--check', 'bot.js']);
+  test('bot.js has valid syntax', result.status === 0);
 } catch (e) {
-  // Expected to fail due to missing token, but syntax should be valid
-  test('bot.js has valid syntax', !e.message.includes('SyntaxError'));
+  test('bot.js has valid syntax', false);
 }
 
 // Test 4: Check .env.example content
